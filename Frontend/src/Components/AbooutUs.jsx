@@ -2,19 +2,27 @@ import React from "react";
 
 const AboutUs = () => {
   return (
-    <div className="bg-gradient-to-b from-blue-50 to-white py-16">
+    <div
+      className="bg-gradient-to-b from-blue-50 to-white py-16"
+      style={{
+        backgroundImage: `url(
+          "https://tse2.mm.bing.net/th?id=OIP.whjL4LDaB1vG7P1YzL_c2QHaEK&pid=Api&P=0&h=220"
+        )`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        opacity: 0.9,
+      }}
+    >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        {/* Header Section */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-extrabold text-gray-900 mb-4">
             About Us
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-black">
             Discover fashion, redefine style with Rentify.
           </p>
         </div>
 
-        {/* Main Content Section */}
         <div className="bg-white shadow-lg rounded-lg p-8 sm:p-10">
           <p className="text-xl text-gray-800 mb-6">
             Welcome to <span className="font-semibold">Rentify</span>, your
@@ -33,7 +41,6 @@ const AboutUs = () => {
             accessories, we have something for everyone.
           </p>
 
-          {/* Mission Section */}
           <h2 className="text-3xl font-semibold text-gray-900 mt-10 mb-4">
             Our Mission
           </h2>
@@ -45,7 +52,6 @@ const AboutUs = () => {
             for all.
           </p>
 
-          {/* Why Choose Us Section */}
           <h2 className="text-3xl font-semibold text-gray-900 mt-10 mb-4">
             Why Choose Rentify?
           </h2>
@@ -60,7 +66,6 @@ const AboutUs = () => {
             <li>Convenient shopping experience with secure payment options.</li>
           </ul>
 
-          {/* Vision Section */}
           <h2 className="text-3xl font-semibold text-gray-900 mt-10 mb-4">
             Our Vision
           </h2>

@@ -18,9 +18,11 @@ import Detail from "./Components/Detail";
 import MyProfile from "./Components/MyProfile";
 import Shop from "./Components/Shop";
 import AboutUs from "./Components/AbooutUs";
+
 function App() {
   const [wishlist, setWishlist] = useState([]);
   const [cart, setCart] = useState([]);
+
   return (
     <div>
       <BrowserRouter>
@@ -70,7 +72,7 @@ function App() {
           <Route path="/grocery" element={<Grocery />} />
           <Route path="/shoes" element={<Shoes />} />
           <Route path="/detail/:id" element={<Detail />} />
-          <Route path="/profile" element={<MyProfile />} />
+          <Route path="/profile/:userId" element={<MyProfile />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>

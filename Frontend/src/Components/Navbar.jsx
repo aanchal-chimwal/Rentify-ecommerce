@@ -25,7 +25,6 @@ const Navbar = ({ wishlistCount, cartCount }) => {
           Rentify
         </div>
 
-        {/* Search Bar */}
         <form
           onSubmit={handleSearch}
           className="flex items-center bg-gray-800 rounded-full px-3 py-1 ml-4 w-96 h-8"
@@ -45,7 +44,6 @@ const Navbar = ({ wishlistCount, cartCount }) => {
           </button>
         </form>
 
-        {/* Right-side options */}
         <div className="flex items-center space-x-8">
           <Link
             className="text-lg text-gray-200 hover:text-indigo-400 transition-colors duration-200 "
@@ -61,18 +59,6 @@ const Navbar = ({ wishlistCount, cartCount }) => {
             Shop
           </Link>
 
-          {/* <Link
-            className="text-lg text-gray-200 hover:text-indigo-400 transition-colors duration-200"
-            to="/login"
-          >
-            Login
-          </Link> */}
-          {/* <Link
-            className="text-lg text-gray-200 hover:text-indigo-400 transition-colors duration-200"
-            to="/signup"
-          >
-            Sign Up
-          </Link> */}
           <Link
             className="text-lg text-gray-200 hover:text-indigo-400 transition-colors duration-200 flex items-center"
             to="/wishlist"
@@ -120,7 +106,10 @@ const Navbar = ({ wishlistCount, cartCount }) => {
               <hr className="dropdown-divider" />
             </li>
             <li>
-              <Link className="dropdown-item" to="/profile">
+              <Link
+                className="dropdown-item"
+                to={`/profile/${localStorage.getItem("id")}`}
+              >
                 My Profile
               </Link>
             </li>

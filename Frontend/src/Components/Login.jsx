@@ -1,4 +1,3 @@
-// Login.js
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // For navigation
@@ -7,11 +6,13 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(null);
   const navigate = useNavigate(); // Initialize navigate
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess(null); // Clear previous success message
 
     const loginData = { email, password };
 
@@ -27,18 +28,27 @@ function Login() {
       );
 
       if (response.status === 200) {
-        // Store the token
-        localStorage.setItem("token", response.data.token);
-        // Optionally store user info
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        // Redirect to dashboard or home
-        navigate("/dashboard");
+        const userId = response.data.user?.id; // Adjust this based on your backend response
+        const token = response.data.token;
+
+        if (userId) {
+          localStorage.setItem("id", userId); // Store user ID in localStorage
+        } else {
+          console.error("User ID not found in the response");
+        }
+
+        localStorage.setItem("token", token); // Store the token
+        setSuccess("Login successful! Keep shopping.");
+        navigate("/home");
+        // navigate(`/profile/${userId}`); // Redirect to the profile page
       } else {
         setError(response.data.message || "Login failed");
       }
     } catch (err) {
       if (err.response) {
-        setError(err.response.data.message || "Login failed");
+        setError(
+          err.response.data.message || "Invalid credentials. Please try again."
+        );
       } else if (err.request) {
         setError("No response from server. Please try again later.");
       } else {
@@ -78,6 +88,9 @@ function Login() {
           </div>
 
           {error && <p className="text-red-500 text-center mt-2">{error}</p>}
+          {success && (
+            <p className="text-green-500 text-center mt-2">{success}</p>
+          )}
 
           <div className="flex justify-center items-center mt-6">
             <button

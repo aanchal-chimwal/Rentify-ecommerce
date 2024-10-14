@@ -1,4 +1,3 @@
-// Signup.js
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -8,13 +7,15 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [conpassword, setConpassword] = useState("");
+  const [Number, setNumber] = useState(""); // Added phone state
+  const [address, setAddress] = useState(""); // Added address state
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
   const handleSubmition = async (e) => {
     e.preventDefault();
-    console.log("Registered successfully");
+    console.log("Attempting to register...");
     setError("");
     setSuccess("");
 
@@ -23,8 +24,8 @@ function Signup() {
       return;
     }
 
-    const signupData = { name, email, password };
-    // console.log("signupData", signupData);
+    // Construct the signup data object
+    const signupData = { name, email, password, Number, address };
 
     try {
       const response = await axios.post(
@@ -37,8 +38,20 @@ function Signup() {
         }
       );
 
+      // Check for successful response
       if (response.status === 201 || response.status === 200) {
         setSuccess("Signup successful! Redirecting to login...");
+
+        // Store user ID in localStorage if available
+        const userId = response.data.newRegister?.id || response.data?.user?.id;
+        if (userId) {
+          localStorage.setItem("id", userId);
+          console.log("User ID stored:", userId);
+        } else {
+          console.error("User ID not found in the response", userId);
+        }
+
+        // Redirect to login after a short delay
         setTimeout(() => {
           navigate("/login");
         }, 2000);
@@ -47,6 +60,7 @@ function Signup() {
       }
     } catch (err) {
       console.error("Error in signup:", err);
+      // Enhanced error handling
       if (err.response) {
         setError(err.response.data.message || "Signup failed");
       } else if (err.request) {
@@ -74,7 +88,6 @@ function Signup() {
               onChange={(e) => setName(e.target.value)}
               required
             />
-
             <input
               className="h-9 w-[95%] rounded-full px-3 mt-3 ml-1"
               type="email"
@@ -84,7 +97,6 @@ function Signup() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-
             <input
               className="h-9 w-[95%] rounded-full px-3 mt-3 ml-1"
               type="password"
@@ -94,7 +106,6 @@ function Signup() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-
             <input
               className="h-9 w-[95%] rounded-full px-3 mt-3 ml-1"
               type="password"
@@ -102,6 +113,24 @@ function Signup() {
               value={conpassword}
               placeholder="Confirm Password"
               onChange={(e) => setConpassword(e.target.value)}
+              required
+            />
+            <input
+              className="h-9 w-[95%] rounded-full px-3 mt-3 ml-1"
+              type="tel"
+              id="Number"
+              placeholder="Phone Number"
+              value={Number}
+              onChange={(e) => setNumber(e.target.value)}
+              required
+            />
+            <input
+              className="h-9 w-[95%] rounded-full px-3 mt-3 ml-1"
+              type="text"
+              id="address"
+              placeholder="Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
               required
             />
           </div>

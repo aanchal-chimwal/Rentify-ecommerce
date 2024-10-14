@@ -1,142 +1,104 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
-function MyProfile() {
-  const [form, setform] = useState({
-    firstname: "",
-    lastname: "",
-    gender: "",
+const MyProfile = () => {
+  const { id } = useParams(); // Get the id from the URL
+  const userId = id || localStorage.getItem("id"); // Fetch user ID from localStorage if not found in useParams
+  const [profile, setProfile] = useState({
+    name: "",
     email: "",
-    number: "",
+    Number: "",
     address: "",
   });
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+      if (!userId) {
+        console.error("User ID is missing");
+        return;
+      }
+      try {
+        const res = await axios.get(
+          `http://localhost:5001/getregister/${userId}`,
+          {
+            // headers: {
+            //   Authorization: `Bearer ${token}`,
+            // },
+          }
+        );
+
+        if (res.data) {
+          setProfile(res.data?.user); // Assuming response.data contains the user data
+        } else {
+          setError("User data not found");
+        }
+      } catch (err) {
+        // Server responded with a status other than 200
+        setError(
+          `Error: ${err.response.status} - ${err.response.data.message}`
+        );
+      }
+    };
+
+    fetchProfile();
+  }, [userId]);
 
   const handleChange = (e) => {
-    setform({
-      ...form,
+    setProfile({
+      ...profile,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted", form);
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.put(
+        `http://localhost:5001/registers/${userId}`,
+        profile,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Use token for authorization
+          },
+        }
+      );
+      console.log("Profile updated:", res.data);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
 
   return (
-    <>
-      <div className="mt-10 rounded-lg h-full w-[800px] border-2 border-gray-300 shadow-lg bg-gradient-to-br from-blue-50 to-slate-100 mx-auto">
-        <div className="bg-blue-600 rounded-t-lg py-5">
-          <h1 className="text-white text-4xl text-center font-bold">
-            Personal Information
+    <div className="mt-10">
+      {" "}
+      <div className="max-w-lg mx-auto p-8  shadow-lg rounded-lg ">
+        <h2 className="text-3xl font-bold text-center rounded-lg text-black mb-8 border-b-2 p-4 bg-orange-600 border-orange-500 pb-3">
+          My Profile
+        </h2>
+
+        <div className="m-2 p-3 ">
+          <h1 className="text-3xl  text-black font-bold mt-2">
+            Name: <span className="text-2xl text-black">{profile.name}</span>
+          </h1>
+          <h1 className="text-3xl  text-black font-bold mt-2">
+            Email: <span className="text-2xl text-black">{profile.email}</span>
+          </h1>
+          <h1 className="text-3xl  text-black font-bold mt-2">
+            Phone Number:{" "}
+            <span className="text-2xl text-black">{profile.Number}</span>
+          </h1>
+          <h1 className="text-3xl  text-black font-bold mt-2">
+            Address:{" "}
+            <span className="text-2xl text-black">{profile.address}</span>
           </h1>
         </div>
-
-        <form onSubmit={handleSubmit} className="p-8 space-y-6">
-          <div className="flex flex-col items-center">
-            <input
-              className="w-full p-3 text-[20px] bg-slate-200 text-black rounded-xl focus:ring-4 focus:ring-blue-300"
-              type="text"
-              placeholder="First Name"
-              name="firstname"
-              value={form.firstname}
-              onChange={handleChange}
-            />
-            <input
-              className="w-full p-3 text-[20px] bg-slate-200 text-black rounded-xl mt-4 focus:ring-4 focus:ring-blue-300"
-              type="text"
-              name="lastname"
-              placeholder="Last Name"
-              value={form.lastname}
-              onChange={handleChange}
-            />
-          </div>
-
-          <h2 className="text-black text-2xl mt-4 font-semibold">
-            Your Gender
-          </h2>
-          <div className="flex space-x-5 mt-3">
-            <label className="flex items-center text-lg">
-              <input
-                className="mr-2"
-                type="radio"
-                name="gender"
-                value="Male"
-                checked={form.gender === "Male"}
-                onChange={handleChange}
-              />
-              Male
-            </label>
-
-            <label className="flex items-center text-lg">
-              <input
-                className="mr-2"
-                type="radio"
-                name="gender"
-                value="Female"
-                checked={form.gender === "Female"}
-                onChange={handleChange}
-              />
-              Female
-            </label>
-
-            <label className="flex items-center text-lg">
-              <input
-                className="mr-2"
-                type="radio"
-                name="gender"
-                value="Transgender"
-                checked={form.gender === "Transgender"}
-                onChange={handleChange}
-              />
-              Transgender
-            </label>
-          </div>
-
-          <label className="block text-black text-2xl font-semibold mt-4">
-            Email Address
-          </label>
-          <input
-            className="w-full p-3 mt-2 text-[20px] bg-slate-200 text-black rounded-xl focus:ring-4 focus:ring-blue-300"
-            type="email"
-            placeholder="Your Email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-          />
-
-          <label className="block text-black text-2xl font-semibold mt-4">
-            Phone Number
-          </label>
-          <input
-            className="w-full p-3 mt-2 text-[20px] bg-slate-200 text-black rounded-xl focus:ring-4 focus:ring-blue-300"
-            type="number"
-            placeholder="Your Number"
-            name="number"
-            value={form.number}
-            onChange={handleChange}
-          />
-
-          <label className="block text-black text-2xl font-semibold mt-4">
-            Address
-          </label>
-          <textarea
-            className="w-full p-3 mt-2 text-[20px] bg-slate-200 text-black rounded-xl focus:ring-4 focus:ring-blue-300"
-            placeholder="Your Address"
-            name="address"
-            value={form.address}
-            onChange={handleChange}
-          />
-
-          <button
-            type="submit"
-            className="text-white bg-gradient-to-r from-blue-500 to-indigo-600 text-3xl p-3 rounded-xl mt-6 w-full hover:shadow-lg transition-transform duration-300 transform hover:scale-105"
-          >
-            Submit
-          </button>
-        </form>
       </div>
-    </>
+    </div>
   );
-}
+};
 
 export default MyProfile;

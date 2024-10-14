@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+
 const Shop = ({ wishlist, setWishlist, cart, setCart }) => {
   const [items, setItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -8,10 +9,10 @@ const Shop = ({ wishlist, setWishlist, cart, setCart }) => {
 
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // let response = await fetch("https://fakestoreapi.com/product");
         let response = await axios.get("http://localhost:5001/getCategory");
         let data = await response.data;
         setItems(data);
@@ -22,18 +23,18 @@ const Shop = ({ wishlist, setWishlist, cart, setCart }) => {
     };
     fetchData();
   }, []);
+
   const navigate = useNavigate();
+
   const addToWishlist = (item) => {
     if (!wishlist.find((wishItem) => wishItem.id === item.id)) {
       setWishlist((prev) => [...prev, item]);
-      // alert(`${item.title} added to wishlist!`);
     } else {
       alert(`${item.title} is already in your wishlist.`);
     }
   };
 
   const addToCart = (item) => {
-    // Prevent adding duplicate items to the cart
     if (!cart.find((cartItem) => cartItem.id === item.id)) {
       setCart((prev) => [...prev, item]);
       navigate("/cart");
@@ -54,6 +55,7 @@ const Shop = ({ wishlist, setWishlist, cart, setCart }) => {
       setFilteredProducts(filtered);
     }
   };
+
   const handleFilterPriceChange = () => {
     if (!minPrice || !maxPrice) {
       setFilteredProducts(items); // Reset to all products if no price range is selected
@@ -71,84 +73,62 @@ const Shop = ({ wishlist, setWishlist, cart, setCart }) => {
     <>
       <div className="flex">
         <div className="flex">
-          <div className="w-[350px] h-[420px] bg-slate-200 rounded-md">
-            <h1 className="text-[30px] font-bold m-2 p-2 text-blue-600">
+          <div className="w-[350px] h-auto bg-white rounded-lg shadow-md p-4 m-4">
+            <h1 className="text-[30px] font-bold text-blue-600 mb-4">
               Filters
             </h1>
 
             {/* Category Filter */}
-            <div className="ml-3">
-              <h1 className="text-2xl  mt-2">Category</h1>
-              <label className="text-[17px] ml-2 mt-2">
-                Men
-                <input
-                  type="radio"
-                  name="category"
-                  value="men's clothing"
-                  onClick={() => handleFilterChange("men's clothing")}
-                />
-              </label>
-              <br />
-              <label className="text-[17px] ml-2 ">
-                Women
-                <input
-                  type="radio"
-                  name="category"
-                  value="women's clothing"
-                  onClick={() => handleFilterChange("women's clothing")}
-                />
-              </label>{" "}
-              <br />
-              <label className="text-[17px] ml-2 ">
-                Jwellery
-                <input
-                  type="radio"
-                  name="category"
-                  value="jewelery"
-                  onClick={() => handleFilterChange("jewelery")}
-                />
-              </label>{" "}
-              <br />
-              <label className="text-[17px] ml-2">
-                Electronics
-                <input
-                  type="radio"
-                  name="category"
-                  value="electronics"
-                  onClick={() => handleFilterChange("electronics")}
-                />
-              </label>{" "}
-              <br />
+            <div className="mb-4">
+              <h1 className="text-2xl font-semibold mt-2">Category</h1>
+              <div className="space-y-2">
+                {[
+                  "men's clothing",
+                  "women's clothing",
+                  "jewelery",
+                  "electronics",
+                ].map((category) => (
+                  <label
+                    key={category}
+                    className="flex items-center bg-gray-100 rounded p-2 hover:bg-gray-200 transition duration-300"
+                  >
+                    <input
+                      type="radio"
+                      name="category"
+                      value={category}
+                      onClick={() => handleFilterChange(category)}
+                      className="mr-2"
+                    />
+                    <span className="text-[17px] capitalize">
+                      {category.replace(/'/g, "")}
+                    </span>
+                  </label>
+                ))}
+              </div>
             </div>
 
             {/* Price Range Filter */}
-            <div className="ml-3">
-              <h2 className="text-2xl">Price Range</h2>
-              <label className="text-[17px] ml-2 mt-2">
-                Min Price
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold">Price Range</h2>
+              <div className="flex space-x-2">
                 <input
                   onChange={(e) => setMinPrice(e.target.value)}
-                  className="h-5 w-20 rounded-sm text-[15px] p-[1px] "
+                  className="h-10 w-24 border rounded p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   type="number"
                   placeholder="Min Price"
                 />
-              </label>
-              <br />
-              <label className="text-[17px] ml-2">
-                Max Price
                 <input
-                  className="h-5 w-20 rounded-sm text-[15px] p-[1px]"
+                  className="h-10 w-24 border rounded p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   type="number"
                   placeholder="Max Price"
                   onChange={(e) => setMaxPrice(e.target.value)}
                 />
-              </label>
+              </div>
             </div>
 
-            {/* Apply Filter Button */}
             <button
               onClick={handleFilterPriceChange}
-              className="text-center bg-blue-700 text-black ml-16 p-1 rounded-md mt-4"
+              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-800 transition duration-300 shadow-md"
             >
               Apply Filters
             </button>
@@ -158,29 +138,28 @@ const Shop = ({ wishlist, setWishlist, cart, setCart }) => {
           {filteredProducts && filteredProducts.length > 0 ? (
             filteredProducts.map((item) => (
               <Link to={`/detail/${item.id}`} key={item.id} className="block">
-                <div className="bg-white p-4 rounded  overflow-hidden h-[400px]">
+                <div className="bg-white p-4 rounded-lg shadow-md overflow-hidden h-[400px] transition-transform duration-200 hover:scale-105">
                   <img
                     src={item.img}
                     alt={item.name}
-                    className=" h-[230px] w-[300px] mb-4 rounded-lg"
+                    className="h-[230px] w-[300px] mb-4 rounded-lg object-cover"
                   />
                   <div className="text-xl font-bold">
                     {item.name ? item.name : "No Title"}
                   </div>
                   <div className="text-lg">
-                    {" "}
                     <i className="fas fa-rupee-sign"> {item.price * 50}</i>
                   </div>
                   <div className="">
                     <button
                       onClick={() => addToWishlist(item)}
-                      className="mr-3 bg-slate-800 text-white rounded px-1 "
+                      className="mr-3 bg-slate-800 text-white rounded px-1 hover:bg-slate-700 transition duration-200"
                     >
                       Wishlist
                     </button>
                     <button
                       onClick={() => addToCart(item)}
-                      className=" bg-slate-800 text-white rounded px-1 "
+                      className="bg-slate-800 text-white rounded px-1 hover:bg-slate-700 transition duration-200"
                     >
                       Add to cart
                     </button>
