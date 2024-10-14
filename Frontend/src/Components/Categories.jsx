@@ -210,7 +210,7 @@ function Categories({ wishlist, setWishlist, cart, setCart }) {
     <div>
       {/* Subcategories Section */}
       <div className="bg-gray-800 ">
-        <div className="subcategories p-4 rounded-md shadow-md text-white text-2xl ">
+        <div className="subcategories p-3 rounded-md shadow-md text-white text-2xl ">
           <ul className="flex space-x-6 justify-center">
             {categories.length > 0 ? (
               categories.map((category) => (
