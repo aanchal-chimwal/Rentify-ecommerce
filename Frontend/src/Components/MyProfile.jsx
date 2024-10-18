@@ -5,19 +5,16 @@ import { useParams } from "react-router-dom";
 const MyProfile = () => {
   const { id } = useParams(); // Get the id from the URL
   const userId = id || localStorage.getItem("id"); // Fetch user ID from localStorage if not found in useParams
-  const [profile, setProfile] = useState({
-    name: "",
-    email: "",
-    Number: "",
-    address: "",
-  });
+  const [profile, setProfile] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
-      if (!userId) {
-        console.error("User ID is missing");
+      if (!userId || !token) {
+        setProfile(null);
+        setError("No Information available");
+
         return;
       }
       try {
@@ -82,18 +79,28 @@ const MyProfile = () => {
 
         <div className="m-2 p-3 ">
           <h1 className="text-3xl  text-black font-bold mt-2">
-            Name: <span className="text-2xl text-black">{profile.name}</span>
+            Name:{" "}
+            <span className="text-2xl text-black">
+              {profile?.name || "N/A"}
+            </span>
           </h1>
           <h1 className="text-3xl  text-black font-bold mt-2">
-            Email: <span className="text-2xl text-black">{profile.email}</span>
+            Email:{" "}
+            <span className="text-2xl text-black">
+              {profile?.email || "N/A"}
+            </span>
           </h1>
           <h1 className="text-3xl  text-black font-bold mt-2">
             Phone Number:{" "}
-            <span className="text-2xl text-black">{profile.Number}</span>
+            <span className="text-2xl text-black">
+              {profile?.Number || "N/A"}
+            </span>
           </h1>
           <h1 className="text-3xl  text-black font-bold mt-2">
             Address:{" "}
-            <span className="text-2xl text-black">{profile.address}</span>
+            <span className="text-2xl text-black">
+              {profile?.address || "N/A"}
+            </span>
           </h1>
         </div>
       </div>

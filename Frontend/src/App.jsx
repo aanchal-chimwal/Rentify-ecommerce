@@ -9,11 +9,6 @@ import Wishlist from "./Components/Wishlist";
 import Cart from "./Components/Cart";
 import Categories from "./Components/Categories";
 import Footer from "./Components/Footer";
-import Clothes from "./Components/Clothes";
-import Accessories from "./Components/Accessories";
-import Grocery from "./Components/Grocery";
-import Shoes from "./Components/Shoes";
-import ChildSection from "./Components/ChildSection";
 import Detail from "./Components/Detail";
 import MyProfile from "./Components/MyProfile";
 import Shop from "./Components/Shop";
@@ -22,11 +17,18 @@ import AboutUs from "./Components/AbooutUs";
 function App() {
   const [wishlist, setWishlist] = useState([]);
   const [cart, setCart] = useState([]);
-
+  const userId = localStorage.getItem("id");
+  console.log("User ID:", userId);
+  console.log("Wishlist:", wishlist);
+  console.log("Cart:", cart);
   return (
     <div>
       <BrowserRouter>
-        <Navbar wishlistCount={wishlist.length} cartCount={cart.length} />
+        <Navbar
+          wishlistCount={wishlist?.length || 0}
+          cartCount={cart?.length || 0}
+        />
+
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />
           <Route
@@ -65,13 +67,18 @@ function App() {
             path="/cart"
             element={<Cart cart={cart} setCart={setCart} />}
           />
-          <Route path="/clothes" element={<Clothes />} />
 
-          <Route path="/accessories" element={<Accessories />} />
-          <Route path="/child" element={<ChildSection />} />
-          <Route path="/grocery" element={<Grocery />} />
-          <Route path="/shoes" element={<Shoes />} />
-          <Route path="/detail/:id" element={<Detail />} />
+          <Route
+            path="/detail/:id"
+            element={
+              <Detail
+                cart={cart}
+                setCart={setCart}
+                wishlist={wishlist}
+                setWishlist={setWishlist}
+              />
+            }
+          />
           <Route path="/profile/:userId" element={<MyProfile />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="*" element={<Navigate to="/home" />} />
