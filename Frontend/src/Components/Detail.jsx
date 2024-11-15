@@ -84,76 +84,84 @@ function Detail({ cart, setCart, wishlist, setWishlist }) {
 
   return (
     <>
-      <div className="flex justify-evenly items-center mt-8">
-        <div>
+      <div className="flex flex-col lg:flex-row justify-center items-center lg:items-start mt-8 space-y-8 lg:space-y-0 lg:space-x-8 px-4">
+        <div className="w-full lg:w-1/2 flex justify-center">
           <img
-            className="h-[500px] hover:scale-110"
+            className="h-[300px] md:h-[400px] lg:h-[500px] hover:scale-110 transition-transform"
             src={product.image}
             alt={product.title || "Image not available"}
           />
         </div>
-        <div className="w-[50%]">
-          <h3 className="text-4xl font-bold">{product.title}</h3>
-          <p className="text-2xl">{product.description}</p>
-          <p className="font-bold text-xl">Price: ${product.price}</p>
-          <p className="font-bold text-xl">
+        <div className="w-full lg:w-1/2 space-y-4">
+          <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center lg:text-left">
+            {product.title}
+          </h3>
+          <p className="text-md md:text-lg lg:text-xl text-justify">
+            {product.description}
+          </p>
+          <p className="font-bold text-lg lg:text-xl">
+            Price: ${product.price}
+          </p>
+          <p className="font-bold text-lg lg:text-xl">
             Rating: {product.rating.rate} ({product.rating.count} reviews)
           </p>
-          <input
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(Math.max(1, e.target.value))}
-            min="1"
-            className="border p-2 rounded-md"
-          />
-          <button className="mr-8 mt-4 bg-blue-600 p-2 text-xl rounded-md font-bold">
-            Buy Now
-          </button>
-          <button
-            onClick={() => addToWishlist(product)}
-            className="mr-8 mt-4 bg-blue-600 p-2 text-xl rounded-md font-bold"
-          >
-            Wishlist
-          </button>
-          <button
-            onClick={() => addToCart(product)}
-            className="mr-8 mt-4 bg-blue-600 p-2 text-xl rounded-md font-bold"
-          >
-            Add to cart
-          </button>
+          <div className="flex items-center space-x-4">
+            <input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(Math.max(1, e.target.value))}
+              min="1"
+              className="border p-2 rounded-md w-16"
+            />
+            <button className="bg-blue-600 text-white p-2 rounded-md font-bold text-sm lg:text-xl">
+              Buy Now
+            </button>
+            <button
+              onClick={() => addToWishlist(product)}
+              className="bg-blue-600 text-white p-2 rounded-md font-bold text-sm lg:text-xl"
+            >
+              Wishlist
+            </button>
+            <button
+              onClick={() => addToCart(product)}
+              className="bg-blue-600 text-white p-2 rounded-md font-bold text-sm lg:text-xl"
+            >
+              Add to cart
+            </button>
+          </div>
         </div>
       </div>
-      <div className="bg-gray-300 mt-2">
-        <h1 className="text-black text-[50px] text-center font-bold">
+      <div className="bg-gray-300 mt-8">
+        <h1 className="text-black text-xl md:text-3xl lg:text-[50px] text-center font-bold">
           Similar Products
         </h1>
-        <div className="bg-gray-300 p-10 grid grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
           {similarProducts.map((product) => (
             <Link
               to={`/detail/${product.id}`}
               key={product.id}
               className="block"
             >
-              <div className="bg-white p-4 rounded overflow-hidden h-[400px]">
+              <div className="bg-white p-4 rounded-lg shadow-md h-[400px]">
                 <img
                   src={product.image}
                   alt={product.title}
-                  className="h-[230px] w-[300px] mb-4 rounded-lg"
+                  className="h-[230px] w-full mb-4 rounded-lg object-contain"
                 />
-                <div className="text-xl font-bold">
-                  {product.title.slice(0, 35)}....
+                <div className="text-md md:text-lg font-bold">
+                  {product.title.slice(0, 35)}...
                 </div>
-                <div className="text-lg">${product.price}</div>
-                <div>
+                <div className="text-md md:text-lg">${product.price}</div>
+                <div className="mt-2 flex justify-between">
                   <button
                     onClick={() => addToWishlist(product)}
-                    className="mr-3 bg-slate-800 text-white rounded px-1"
+                    className="bg-slate-800 text-white rounded px-2 py-1 text-xs"
                   >
                     Wishlist
                   </button>
                   <button
                     onClick={() => addToCart(product)}
-                    className="bg-slate-800 text-white rounded px-1"
+                    className="bg-slate-800 text-white rounded px-2 py-1 text-xs"
                   >
                     Add to cart
                   </button>

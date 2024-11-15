@@ -39,7 +39,7 @@
 //       )}
 //     </div>
 //   );
-// }
+// }`
 
 // export default Wishlist;
 import React, { useEffect } from "react";

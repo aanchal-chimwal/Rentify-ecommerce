@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // For navigation
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(null);
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess(null); // Clear previous success message
+    setSuccess(null);
 
     const loginData = { email, password };
 
@@ -28,19 +28,18 @@ function Login() {
       );
 
       if (response.status === 200) {
-        const userId = response.data.user?.id; // Adjust this based on your backend response
+        const userId = response.data.user?.id;
         const token = response.data.token;
 
         if (userId) {
-          localStorage.setItem("id", userId); // Store user ID in localStorage
+          localStorage.setItem("id", userId);
         } else {
           console.error("User ID not found in the response");
         }
 
-        localStorage.setItem("token", token); // Store the token
+        localStorage.setItem("token", token);
         setSuccess("Login successful! Keep shopping.");
         navigate("/home");
-        // navigate(`/profile/${userId}`); // Redirect to the profile page
       } else {
         setError(response.data.message || "Login failed");
       }
@@ -59,55 +58,57 @@ function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <form onSubmit={handleLogin}>
-        <div className="box bg-slate-400 h-[70vh] w-[60vh] rounded-xl px-4 ">
-          <h1 className="font-bold text-4xl text-white flex justify-center pt-6">
-            Log In
-          </h1>
-          <div className="space-y-4">
-            <input
-              className="h-9 w-[95%] rounded-full px-3 mt-5 ml-1"
-              type="email"
-              id="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-
-            <input
-              className="h-9 w-[95%] rounded-full px-3 mt-3 ml-1"
-              type="password"
-              id="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          {error && <p className="text-red-500 text-center mt-2">{error}</p>}
-          {success && (
-            <p className="text-green-500 text-center mt-2">{success}</p>
-          )}
-
-          <div className="flex justify-center items-center mt-6">
-            <button
-              className="bg-purple-600 text-xl hover:bg-purple-800 rounded text-white h-[30px] w-[80px]"
-              type="submit"
-            >
-              Log in
-            </button>
-          </div>
-
-          <p className="flex justify-center items-center text-white mt-4">
-            Don't have an account?
-            <a href="/signup" className="ml-2">
-              <span className="text-black">Create new account</span>
-            </a>
-          </p>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white shadow-lg rounded-xl px-8 py-10 w-full max-w-md"
+      >
+        <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
+          Log In
+        </h1>
+        <div className="space-y-4">
+          <input
+            className="w-full h-12 px-4 border rounded-full focus:ring-2 focus:ring-purple-600 focus:outline-none"
+            type="email"
+            id="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            className="w-full h-12 px-4 border rounded-full focus:ring-2 focus:ring-purple-600 focus:outline-none"
+            type="password"
+            id="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </div>
+
+        {error && (
+          <p className="text-red-500 text-center mt-2 text-sm">{error}</p>
+        )}
+        {success && (
+          <p className="text-green-500 text-center mt-2 text-sm">{success}</p>
+        )}
+
+        <div className="flex justify-center items-center mt-6">
+          <button
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white text-lg font-bold py-3 rounded-full transition duration-200"
+            type="submit"
+          >
+            Log in
+          </button>
+        </div>
+
+        <p className="text-center text-gray-600 mt-4 text-sm">
+          Don't have an account?{" "}
+          <a href="/signup" className="text-purple-600 hover:underline">
+            Create new account
+          </a>
+        </p>
       </form>
     </div>
   );

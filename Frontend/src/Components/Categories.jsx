@@ -21,6 +21,7 @@ function Categories({ wishlist, setWishlist, cart, setCart }) {
   const [quantity, setQuantity] = useState(1); // Added quantity state
   const navigate = useNavigate();
   const userId = localStorage.getItem("id"); // Retrieve userId from localStorage
+  const [page, setpage] = useState(1);
 
   // Fetch categories from the backend
   useEffect(() => {
@@ -102,13 +103,28 @@ function Categories({ wishlist, setWishlist, cart, setCart }) {
   if (error) {
     return <div>{error}</div>;
   }
+  const itemPerPage = 4;
+  const lastIndex = page * itemPerPage;
+  const firstIndex = lastIndex - itemPerPage;
+  const newProduct = items.slice(firstIndex, lastIndex);
+  const totalPage = Math.ceil(items.length / itemPerPage);
 
+  const handlePrevious = () => {
+    if (page > 1) {
+      setpage(page - 1);
+    }
+  };
+  const handleNext = () => {
+    if (page < totalPage) {
+      setpage(page + 1);
+    }
+  };
   return (
     <div>
       {/* Subcategories Section */}
       <div className="bg-gray-800 ">
-        <div className="subcategories p-3 rounded-md shadow-md text-white text-2xl ">
-          <ul className="flex space-x-6 justify-center">
+        <div className="subcategories p-3 rounded-md shadow-md text-white text-xs md:text-2xl ">
+          <ul className="flex md:space-x-6 space-x-2 justify-center">
             {categories.length > 0 ? (
               categories.map((category) => (
                 <li
@@ -124,7 +140,6 @@ function Categories({ wishlist, setWishlist, cart, setCart }) {
           </ul>
         </div>
       </div>
-
       {/* Carousel Section */}
       <div className="w-full h-full overflow-x-hidden bg-slate-400 ">
         <Slider {...SliderSettings}>
@@ -138,33 +153,35 @@ function Categories({ wishlist, setWishlist, cart, setCart }) {
           ))}
         </Slider>
       </div>
-
       {/* Product Grid Section */}
-      <div className="bg-gray-300 p-10 grid grid-cols-4 gap-6">
-        {items.map((item) => (
+      <div className="bg-gray-300 p-10 grid grid-cols-2 md:grid-cols-4 gap-6">
+        {newProduct.map((item) => (
           <Link to={`/detail/${item.id}`} key={item.id} className="block">
-            <div className="bg-white p-4 rounded overflow-hidden h-[400px]">
+            <div className="bg-white p-4 rounded overflow-hidden h:[300px] md:h-[400px]">
               <img
                 src={item.image}
                 alt={item.title}
-                className=" h-[230px] w-[300px] mb-4 rounded-lg"
+                className="  h-[150px] md:h-[230px] w-[300px] mb-4 rounded-lg"
               />
-              <div className="text-xl font-bold">
+              <div className=" text-xs md:text-xl md:font-bold ">
                 {item.title.slice(0, 35)}...
               </div>
-              <div className="text-lg">
-                <i className="fas fa-rupee-sign"> {item.price * 50}</i>
+              <div>
+                <i className="fas fa-rupee-sign  text-xs md:text-lg">
+                  {" "}
+                  {item.price * 50}
+                </i>
               </div>
               <div>
                 <button
                   onClick={() => addToWishlist(item)}
-                  className="mr-3 bg-slate-800 text-white rounded px-1"
+                  className="mr-3 bg-slate-800 text-white rounded px-1  text-xs md:text-lg"
                 >
                   Wishlist
                 </button>
                 <button
                   onClick={() => addToCart(item)}
-                  className="bg-slate-800 text-white rounded px-1"
+                  className="bg-slate-800 text-white rounded px-1 text-xs md:text-lg"
                 >
                   Add to cart
                 </button>
@@ -172,6 +189,20 @@ function Categories({ wishlist, setWishlist, cart, setCart }) {
             </div>
           </Link>
         ))}
+      </div>{" "}
+      <div className="flex justify-between ">
+        <button
+          onClick={handlePrevious}
+          className="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 active:bg-blue-800 transition duration-200"
+        >
+          Previous
+        </button>
+        <button
+          className="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 active:bg-blue-800 transition duration-200"
+          onClick={handleNext}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
